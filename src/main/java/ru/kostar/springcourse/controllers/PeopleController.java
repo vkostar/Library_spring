@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.kostar.springcourse.dao.BookDAO;
+import ru.kostar.springcourse.models.Book;
 import ru.kostar.springcourse.models.Person;
 import ru.kostar.springcourse.dao.PersonDAO;
 
@@ -17,9 +19,12 @@ public class PeopleController {
 
     private final PersonDAO personDAO;
 
+
+
     @Autowired
     public PeopleController(PersonDAO personDAO) {
         this.personDAO = personDAO;
+
     }
 
     @GetMapping()
@@ -49,7 +54,7 @@ public class PeopleController {
         return "redirect:/people";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("person", personDAO.show(id));
         return "people/edit";
@@ -65,7 +70,7 @@ public class PeopleController {
         return "redirect:/people";
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     public String delete(@PathVariable("id") int id) {
         personDAO.delete(id);
         return "redirect:/people";
