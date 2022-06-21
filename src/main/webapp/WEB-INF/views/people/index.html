@@ -2,9 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Index</title>
+    <title>Люди</title>
 </head>
 <body>
+
+<h1>  Страница со списком людей</h1>
 
 <div th:each="person : ${people}">
     <a th:href="@{/people/{id}(id=${person.getId()})}"
@@ -14,7 +16,7 @@
 <br/>
 <hr/>
 
-<a href="/people/new">Create new person</a>
+<a href="/people/new">Добавить человека</a>
 
 </body>
 </html>
