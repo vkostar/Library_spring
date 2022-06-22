@@ -17,12 +17,12 @@ public class Book {
     private String author;
 
     @Min(value = 0, message = "Year should be greater than 0")
-    @Max(value=2023,message = "Year should be less than 2023")
+    @Max(value = 2023, message = "Year should be less than 2023")
     private int year;
+//    private int idPerson;
 
 
-
-    public Book(int id, String name, String author, int year, int id_person) {
+    public Book(int id, String name, String author, int year) {
         this.id = id;
         this.name = name;
         this.author = author;
@@ -67,4 +67,11 @@ public class Book {
     }
 
 
+
+
+
+//    public void setIdPerson(int idPerson) {
+//        this.idPerson = idPerson;
+//    }
 }
+
