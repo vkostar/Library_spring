@@ -49,9 +49,9 @@ public class BookDAO {
                 id);
     }
 
-    public Optional<Person> getPerson(int id) {
+    public Optional<Person> getPerson(int book) {
         return jdbcTemplate.query("SELECT * FROM Book JOIN Person ON Person.id=Book.id_person "
-                + "WHERE Book.id=?", new Object[]{id}, new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
+                + "WHERE Book.id=?", new Object[]{book}, new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
 
     }
 
