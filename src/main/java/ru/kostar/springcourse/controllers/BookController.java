@@ -36,8 +36,13 @@ public class BookController {
 
 
     @GetMapping()
-    public String indexBook(Model model) {
-        model.addAttribute("books", bookService.findAll());
+    public String indexBook(Model model, @RequestParam(value = "page", required = false) Integer page,
+                            @RequestParam(value = "itemsPerPage", required = false) Integer itemsPerPage,
+                            @RequestParam(value = "sorted",required = false) Boolean sorted) {
+
+        model.addAttribute("books", bookService.findAll(page, itemsPerPage, sorted));
+
+
         return "books/index";
     }
 
@@ -98,15 +103,20 @@ public class BookController {
 
     @PatchMapping("/{id}/assign")
     public String assign(@ModelAttribute("person") Person person, @PathVariable("id") int id) {
-       bookService.assign(person, id);
+        bookService.assign(person, id);
         return "redirect:/books/" + id;
     }
 
     @PostMapping("/{id}/untouched")
     public String untouched(@PathVariable("id") int id) {
-       bookService.untouched(id);
+        bookService.untouched(id);
         return "redirect:/books/" + id;
     }
+//    @GetMapping()
+//    public String index(Model model, @RequestParam int page, @RequestParam int itemsPerPage) {
+////        model.addAttribute("books", bookService.findAllByPage(page,itemsPerPage));
+//        return "books/index";
+//    }
 
 
 }

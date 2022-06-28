@@ -1,12 +1,12 @@
 package ru.kostar.springcourse.models;
 
 
-
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Entity
 @Table(name = "Book")
@@ -34,6 +34,15 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "id_person", referencedColumnName = "id")
     Person person;
+
+
+    @Column(name = "taken_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date taken_at;
+
+
+    @Transient
+    private boolean expired;
 
     public Book() {
     }
@@ -83,6 +92,22 @@ public class Book {
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public Date getTaken_at() {
+        return taken_at;
+    }
+
+    public void setTaken_at(Date taken_at) {
+        this.taken_at = taken_at;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 }
 

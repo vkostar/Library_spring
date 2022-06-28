@@ -2,16 +2,14 @@ package ru.kostar.springcourse.services;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import ru.kostar.springcourse.models.Book;
 import ru.kostar.springcourse.models.Person;
 import ru.kostar.springcourse.repositories.BookRepository;
-import ru.kostar.springcourse.repositories.PeopleRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +26,26 @@ public class BookService {
     }
 
 
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public List<Book> findAll(Integer page, Integer itemsPerPage, Boolean sort_by_year) {
+
+        if (sort_by_year == null) {
+            if ((page == null || itemsPerPage == null)) {
+                return bookRepository.findAll();
+            } else {
+                return bookRepository.findAll(PageRequest.of(page, itemsPerPage)).getContent();
+            }
+
+        } else {
+            if ((page == null || itemsPerPage == null)) {
+                return bookRepository.findAll(Sort.by("year"));
+            } else {
+                return bookRepository.findAll(PageRequest.of(page, itemsPerPage, Sort.by("year"))).getContent();
+            }
+
+        }
+
     }
+
 
     public void save(Book book) {
 
@@ -57,9 +72,15 @@ public class BookService {
     }
 
 
-    public void untouched( int id) {
+    public void untouched(int id) {
         Book book = bookRepository.findById(id).get();
         book.setPerson(null);
+
+    }
+
+    public List<Book> findAllByPage(int page, int itemsPerPage) {
+        return bookRepository.findAll(PageRequest.of(page, itemsPerPage)).getContent();
+
 
     }
 }
