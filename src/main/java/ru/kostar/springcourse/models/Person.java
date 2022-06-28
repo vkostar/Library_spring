@@ -4,7 +4,6 @@ package ru.kostar.springcourse.models;
 
 import org.hibernate.annotations.Cascade;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -28,7 +27,7 @@ public class Person {
 
     @Column(name = "date")
     @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy")
 
     private Date date;
 

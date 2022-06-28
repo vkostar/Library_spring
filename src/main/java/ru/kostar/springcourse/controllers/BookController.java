@@ -2,15 +2,15 @@ package ru.kostar.springcourse.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import ru.kostar.springcourse.models.Book;
 import ru.kostar.springcourse.models.Person;
-import ru.kostar.springcourse.repositories.BookRepository;
-import ru.kostar.springcourse.repositories.PeopleRepository;
+import ru.kostar.springcourse.services.BookService;
+import ru.kostar.springcourse.services.PeopleService;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -18,18 +18,18 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
-@Transactional
 public class BookController {
 
 
-    private final BookRepository bookRepository;
-    private final PeopleRepository peopleRepository;
+    private final BookService bookService;
+    private final PeopleService peopleService;
 
 
     @Autowired
-    public BookController(BookRepository bookRepository, PeopleRepository peopleRepository) {
-        this.bookRepository = bookRepository;
-        this.peopleRepository = peopleRepository;
+    public BookController(BookService bookService, PeopleService peopleService) {
+
+        this.bookService = bookService;
+        this.peopleService = peopleService;
 
 
     }
@@ -37,7 +37,7 @@ public class BookController {
 
     @GetMapping()
     public String indexBook(Model model) {
-        model.addAttribute("books", bookRepository.findAll());
+        model.addAttribute("books", bookService.findAll());
         return "books/index";
     }
 
@@ -52,14 +52,14 @@ public class BookController {
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "books/new";
-
-        bookRepository.save(book);
+        bookService.save(book);
+//        bookRepository.save(book);
         return "redirect:/books";
     }
 
     @GetMapping("{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("book", bookRepository.findById(id).get());
+        model.addAttribute("book", bookService.findById(id).get());
         return "books/edit";
     }
 
@@ -69,24 +69,22 @@ public class BookController {
         if (bindingResult.hasErrors())
             return "books/edit";
         book.setId(id);
-        bookRepository.save(book);
+        bookService.save(book);
         return "redirect:/books";
     }
 
 
-
-
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
-        model.addAttribute("book", bookRepository.findById(id));
+        model.addAttribute("book", bookService.findById(id));
 
 
-        Optional<Book> book = bookRepository.findById(id);
+        Optional<Book> book = bookService.findById(id);
         Person bookOwner = book.get().getPerson();
         if (bookOwner != null) {
             model.addAttribute("owner", bookOwner);
         } else {
-            model.addAttribute("people", peopleRepository.findAll());
+            model.addAttribute("people", peopleService.findAll());
         }
 
         return "books/page";
@@ -94,21 +92,19 @@ public class BookController {
 
     @DeleteMapping("{id}")
     public String delete(@PathVariable("id") int id) {
-        bookRepository.deleteById(id);
+        bookService.deleteById(id);
         return "redirect:/books";
     }
 
     @PatchMapping("/{id}/assign")
     public String assign(@ModelAttribute("person") Person person, @PathVariable("id") int id) {
-        Optional<Book> book = bookRepository.findById(id);
-        book.get().setPerson(person);
+       bookService.assign(person, id);
         return "redirect:/books/" + id;
     }
 
     @PostMapping("/{id}/untouched")
     public String untouched(@PathVariable("id") int id) {
-        Optional<Book> book = bookRepository.findById(id);
-        book.get().setPerson(null);
+       bookService.untouched(id);
         return "redirect:/books/" + id;
     }
 
