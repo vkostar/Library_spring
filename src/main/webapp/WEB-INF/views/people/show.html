@@ -6,16 +6,16 @@
 </head>
 <body>
 
-<b><p th:text="${person.getName() + ', ' + person.getDate()}">VALUE</p></b>
+<b><p th:text="${person.get().getName() + ', ' + person.get().getDate()}">VALUE</p></b>
 
 <hr>
 
-<div th:if="${!listOfBook.isEmpty()}">
+<div th:if="${listOfBook}">
 
 <b>Книги:</b>
     <br>
     <table th:each="book : ${listOfBook}">
-        <tr th:text="${book.getName() +', '+book.author +', ' + book.year}">user</tr>
+        <tr th:text="${book.getName() +', '+book.getAuthor() +', ' + book.getYear()}">user</tr>
     </table>
 
 
@@ -30,10 +30,10 @@
 
 <hr>
 
-<form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
+<form th:method="GET" th:action="@{/people/{id}/edit(id=${person.get().getPerson_id()})}">
     <input type="submit" value="Редактировать"/></form>
 <br>
-<form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
+<form th:method="DELETE" th:action="@{/people/{id}(id=${person.get().getPerson_id()})}">
     <input type="submit" value="Удалить"/>
 </form>
 

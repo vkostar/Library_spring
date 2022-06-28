@@ -9,7 +9,7 @@
 <h1>  Страница со списком людей</h1>
 
 <div th:each="person : ${people}">
-    <a th:href="@{/people/{id}(id=${person.getId()})}"
+    <a th:href="@{/people/{id}(id=${person.person_id})}"
        th:text="${person.getName() + ', ' + person.getDate()}">user</a>
 </div>
 

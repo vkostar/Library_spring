@@ -2,13 +2,15 @@ package ru.kostar.springcourse.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.kostar.springcourse.dao.BookDAO;
-import ru.kostar.springcourse.dao.PersonDAO;
+
 import ru.kostar.springcourse.models.Book;
 import ru.kostar.springcourse.models.Person;
+import ru.kostar.springcourse.repositories.BookRepository;
+import ru.kostar.springcourse.repositories.PeopleRepository;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -16,23 +18,26 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
+@Transactional
 public class BookController {
 
 
-    private final BookDAO bookDAO;
-    private final PersonDAO personDAO;
+    private final BookRepository bookRepository;
+    private final PeopleRepository peopleRepository;
+
 
     @Autowired
-    public BookController(BookDAO bookDAO, PersonDAO personDAO) {
+    public BookController(BookRepository bookRepository, PeopleRepository peopleRepository) {
+        this.bookRepository = bookRepository;
+        this.peopleRepository = peopleRepository;
 
-        this.bookDAO = bookDAO;
-        this.personDAO = personDAO;
+
     }
 
 
     @GetMapping()
     public String indexBook(Model model) {
-        model.addAttribute("books", bookDAO.index());
+        model.addAttribute("books", bookRepository.findAll());
         return "books/index";
     }
 
@@ -48,13 +53,13 @@ public class BookController {
         if (bindingResult.hasErrors())
             return "books/new";
 
-        bookDAO.save(book);
+        bookRepository.save(book);
         return "redirect:/books";
     }
 
     @GetMapping("{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("book", bookDAO.show(id));
+        model.addAttribute("book", bookRepository.findById(id).get());
         return "books/edit";
     }
 
@@ -63,21 +68,25 @@ public class BookController {
                          @PathVariable("id") int id) {
         if (bindingResult.hasErrors())
             return "books/edit";
-
-        bookDAO.update(id, book);
+        book.setId(id);
+        bookRepository.save(book);
         return "redirect:/books";
     }
 
+
+
+
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
-        model.addAttribute("book", bookDAO.show(id));
+        model.addAttribute("book", bookRepository.findById(id));
 
-        Optional<Person> bookOwner = bookDAO.getPerson(id);
-        if (bookOwner.isPresent()) {
-            model.addAttribute("owner", bookOwner.get());
-        }
-        else {
-            model.addAttribute("people", personDAO.index());
+
+        Optional<Book> book = bookRepository.findById(id);
+        Person bookOwner = book.get().getPerson();
+        if (bookOwner != null) {
+            model.addAttribute("owner", bookOwner);
+        } else {
+            model.addAttribute("people", peopleRepository.findAll());
         }
 
         return "books/page";
@@ -85,18 +94,21 @@ public class BookController {
 
     @DeleteMapping("{id}")
     public String delete(@PathVariable("id") int id) {
-        bookDAO.delete(id);
+        bookRepository.deleteById(id);
         return "redirect:/books";
     }
 
     @PatchMapping("/{id}/assign")
     public String assign(@ModelAttribute("person") Person person, @PathVariable("id") int id) {
-        bookDAO.assign(person, id);
+        Optional<Book> book = bookRepository.findById(id);
+        book.get().setPerson(person);
         return "redirect:/books/" + id;
     }
+
     @PostMapping("/{id}/untouched")
     public String untouched(@PathVariable("id") int id) {
-        bookDAO.untouched(id);
+        Optional<Book> book = bookRepository.findById(id);
+        book.get().setPerson(null);
         return "redirect:/books/" + id;
     }
 

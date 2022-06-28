@@ -4,17 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import ru.kostar.springcourse.dao.PersonDAO;
+
 import ru.kostar.springcourse.models.Person;
 
 @Component
 public class PersonValidator implements Validator {
-    PersonDAO personDAO;
+//    PersonDAO personDAO;
 
-    @Autowired
-    public PersonValidator(PersonDAO personDAO) {
-        this.personDAO = personDAO;
-    }
+//    @Autowired
+//    public PersonValidator(PersonDAO personDAO) {
+//        this.personDAO = personDAO;
+//    }
 
     @Override
     public boolean supports(Class<?> aClass) {

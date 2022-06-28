@@ -1,37 +1,48 @@
 package ru.kostar.springcourse.models;
 
+
+
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+@Entity
+@Table(name = "Book")
 public class Book {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @NotEmpty(message = "Name should not be empty")
     @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
+    @Column(name = "name")
     private String name;
 
     @NotEmpty(message = "Author should not be empty")
     @Size(min = 2, max = 30, message = "Author should be between 2 and 30 characters")
+    @Column(name = "author")
     private String author;
 
     @Min(value = 0, message = "Year should be greater than 0")
     @Max(value = 2023, message = "Year should be less than 2023")
+    @Column(name = "year")
     private int year;
-//    private int idPerson;
 
+    @ManyToOne
+    @JoinColumn(name = "id_person", referencedColumnName = "id")
+    Person person;
 
-    public Book(int id, String name, String author, int year) {
-        this.id = id;
+    public Book() {
+    }
+
+    public Book(String name, String author, int year, Person person) {
         this.name = name;
         this.author = author;
         this.year = year;
-
-    }
-
-
-    public Book() {
+        this.person = person;
     }
 
     public int getId() {
@@ -66,12 +77,12 @@ public class Book {
         this.year = year;
     }
 
+    public Person getPerson() {
+        return person;
+    }
 
-
-
-
-//    public void setIdPerson(int idPerson) {
-//        this.idPerson = idPerson;
-//    }
+    public void setPerson(Person person) {
+        this.person = person;
+    }
 }
 
