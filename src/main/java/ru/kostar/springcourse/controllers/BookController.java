@@ -58,7 +58,6 @@ public class BookController {
         if (bindingResult.hasErrors())
             return "books/new";
         bookService.save(book);
-//        bookRepository.save(book);
         return "redirect:/books";
     }
 
@@ -112,11 +111,18 @@ public class BookController {
         bookService.untouched(id);
         return "redirect:/books/" + id;
     }
-//    @GetMapping()
-//    public String index(Model model, @RequestParam int page, @RequestParam int itemsPerPage) {
-////        model.addAttribute("books", bookService.findAllByPage(page,itemsPerPage));
-//        return "books/index";
-//    }
+
+    @GetMapping("/search")
+    public String search() {
+        return "books/search";
+    }
+
+    @PostMapping("/search")
+    public String search(Model model,@RequestParam String query) {
+        model.addAttribute("searched_book", bookService.findByQuery(query));
+        return "books/search";
+    }
+
 
 
 }

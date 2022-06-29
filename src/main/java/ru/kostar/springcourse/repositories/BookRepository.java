@@ -10,4 +10,5 @@ import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Integer> {
     List<Book> findAllByPerson(Person person);
+    List<Book> findAllByNameStartsWith(String query);
 }

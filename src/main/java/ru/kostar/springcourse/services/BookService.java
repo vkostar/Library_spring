@@ -3,7 +3,6 @@ package ru.kostar.springcourse.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +33,6 @@ public class BookService {
             } else {
                 return bookRepository.findAll(PageRequest.of(page, itemsPerPage)).getContent();
             }
-
         } else {
             if ((page == null || itemsPerPage == null)) {
                 return bookRepository.findAll(Sort.by("year"));
@@ -45,7 +43,6 @@ public class BookService {
         }
 
     }
-
 
     public void save(Book book) {
 
@@ -78,8 +75,8 @@ public class BookService {
 
     }
 
-    public List<Book> findAllByPage(int page, int itemsPerPage) {
-        return bookRepository.findAll(PageRequest.of(page, itemsPerPage)).getContent();
+    public List<Book> findByQuery(String query) {
+        return bookRepository.findAllByNameStartsWith(query);
 
 
     }
