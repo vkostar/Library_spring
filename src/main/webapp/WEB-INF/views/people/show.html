@@ -12,10 +12,12 @@
 
 <div th:if="${listOfBook}">
 
-<b>Книги:</b>
+    <b>Книги:</b>
     <br>
     <table th:each="book : ${listOfBook}">
-        <tr th:text="${book.getName() +', '+book.getAuthor() +', ' + book.getYear()}">user</tr>
+        <span th:style="${book.isExpired()}?'color: red':'color: black'"
+              th:text="${book.getName() +', '+book.getAuthor() +', ' + book.getYear()}"
+        >user</span>
     </table>
 
 
@@ -39,3 +41,7 @@
 
 </body>
 </html>
+
+
+<!--<span th:text="${book.getName() +', '+book.getAuthor() +', ' + book.getYear()}"-->
+<!--      th:style="${book!=null}?'color: red':'color: black'" >user</span>-->

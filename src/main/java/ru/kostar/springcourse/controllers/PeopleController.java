@@ -1,10 +1,12 @@
 package ru.kostar.springcourse.controllers;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.kostar.springcourse.models.Book;
 import ru.kostar.springcourse.models.Person;
 import ru.kostar.springcourse.services.BookService;
 import ru.kostar.springcourse.services.PeopleService;
@@ -40,8 +42,10 @@ public class PeopleController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
+
         model.addAttribute("person", peopleService.findById(id));
         model.addAttribute("listOfBook", bookService.findAllByPerson(peopleService.findById(id).get()));
+
         return "people/show";
     }
 
